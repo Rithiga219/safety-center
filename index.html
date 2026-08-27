@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Safety Center</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <h1>Safety Center</h1>
+        <p class="subtitle">Your safety is our priority</p>
+
+        <div class="safety-card">
+            <button class="sos" onclick="triggerSOS()" id="sosBtn">🚨 Emergency SOS</button>
+            
+            <div id="sos-modal" class="modal-hidden">
+                <div class="modal-box">
+                    <h2>🚨 SOS Alert Sent!</h2>
+                    <p id="sos-location">Fetching location...</p>
+                    <p style="font-size:13px; color:green;">Your emergency contacts & nearby police informed</p>
+                    <button onclick="closeSOS()" style="background:#333; color:white; padding:10px 20px; border-radius:8px;">OK Close</button>
+                </div>
+            </div>
+
+            <button onclick="shareLocation()">📍 Share Now</button>
+            <button onclick="findNearby('hospital')">🏥 Nearby Hospital</button>
+            <button onclick="findNearby('police')">👮 Police Station</button>
+        </div>
+    </div>
+
+<script>
+async function triggerSOS() {
+  const btn = document.getElementById('sosBtn');
+  btn.innerText = "⏳ Sending SOS...";
+  btn.disabled = true;
+
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    const locationLink = `https://maps.google.com/?q=${lat},${lng}`;
+
+    document.getElementById('sos-location').innerHTML = `Location: <br><a href="${locationLink}" target="_blank">${locationLink}</a>`;
+    document.getElementById('sos-modal').className = "modal-show";
+
+    localStorage.setItem('lastSOS', JSON.stringify({lat, lng, time: new Date()}));
+
+    window.open(`https://wa.me/?text=🚨 EMERGENCY SOS! I need help! My location: ${locationLink}`, '_blank');
+    
+    btn.innerText = "🚨 Emergency SOS";
+    btn.disabled = false;
+  }, () => {
+    alert("Please enable Location!");
+    btn.innerText = "🚨 Emergency SOS";
+    btn.disabled = false;
+  });
+}
+
+function closeSOS(){
+  document.getElementById('sos-modal').className = "modal-hidden";
+}
+
+function shareLocation(){
+  navigator.geolocation.getCurrentPosition(pos => {
+    window.open(`https://wa.me/?text=My location: https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`);
+  });
+}
+function findNearby(type){
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    const query = type === 'hospital' ? 'hospital' : 'police station';
+    window.open(`https://www.google.com/maps/search/${query}/@${lat},${lng},15z`, '_blank');
+  });
+}
+</script>
+</body>

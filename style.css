@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #f2f7ff;
+    font-family: Arial, sans-serif;
+}
+
+.app {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 30px 20px;
+    background-color: white;
+}
+
+h1 {
+    margin-bottom: 5px;
+    color: #1d3557;
+    font-size: 30px;
+}
+
+.subtitle {
+    margin-top: 0;
+    color: #777;
+    font-size: 15px;
+}
+
+.safety-card {
+    margin-top: 30px;
+}
+
+button {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 15px;
+    background-color: #eef5ff;
+    color: #1d3557;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.02);
+}
+
+.sos {
+    background-color: #e63946;
+    color: white;
+}
+/* SOS Modal ku */
+.modal-hidden { display: none; }
+.modal-show {
+  display: flex;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 300px;
+  text-align: center;
+}
+.sos:active {
+  transform: scale(0.95);
+  background-color: #b71c1c !important;
+}
