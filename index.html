@@ -1,75 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Safety Center</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safety Center</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; height:auto; background:#eef2ff; font-family: sans-serif; }
+.safety-wrapper { background:white; max-width:420px; margin:0 auto; min-height:100vh; padding:20px; padding-bottom:90px; position:relative; }
+h2 { color:#1e293b; margin:0; }
+p.sub { color:#64748b; font-size:13px; margin:5px 0 20px 0; }
+.btn { display:block; width:100%; padding:14px; margin:12px 0; border:none; border-radius:12px; font-size:14px; font-weight:bold; cursor:pointer; }
+.btn-red { background:#ef4444; color:white; }
+.btn-light { background:#eef6ff; color:#1e293b; }
+
+/* Bottom Nav - Final Fixed */
+.bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:420px; background:white; display:flex; justify-content:space-around; padding:8px 0; border-top:1px solid #eee; z-index:999; }
+.nav-item { text-align:center; text-decoration:none; color:#888; font-size:11px; }
+.nav-item.active { color:#7c3aed; font-weight:bold; }
+.nav-item span { font-size:20px; display:block; }
+</style>
 </head>
 <body>
-    <div class="app">
-        <h1>Safety Center</h1>
-        <p class="subtitle">Your safety is our priority</p>
+<div class="safety-wrapper">
+  <h2>Safety Center</h2>
+  <p class="sub">Your safety is our priority</p>
+  
+  <button class="btn btn-red" onclick="alert('SOS Sent!')">🚨 Emergency SOS</button>
+  <button class="btn btn-light" onclick="shareLocation()">📍 Share Now</button>
+  <button class="btn btn-light" onclick="findNearby('hospital')">🏥 Nearby Hospital</button>
+  <button class="btn btn-light" onclick="findNearby('police')">👮 Police Station</button>
+</div>
 
-        <div class="safety-card">
-            <button class="sos" onclick="triggerSOS()" id="sosBtn">🚨 Emergency SOS</button>
-            
-            <div id="sos-modal" class="modal-hidden">
-                <div class="modal-box">
-                    <h2>🚨 SOS Alert Sent!</h2>
-                    <p id="sos-location">Fetching location...</p>
-                    <p style="font-size:13px; color:green;">Your emergency contacts & nearby police informed</p>
-                    <button onclick="closeSOS()" style="background:#333; color:white; padding:10px 20px; border-radius:8px;">OK Close</button>
-                </div>
-            </div>
-
-            <button onclick="shareLocation()">📍 Share Now</button>
-            <button onclick="findNearby('hospital')">🏥 Nearby Hospital</button>
-            <button onclick="findNearby('police')">👮 Police Station</button>
-        </div>
-    </div>
+<div class="bottom-nav">
+  <a href="#" class="nav-item"><span>🏠</span>Home</a>
+  <a href="#" class="nav-item"><span>🔍</span>Explore</a>
+  <a href="#" class="nav-item"><span>📅</span>Bookings</a>
+  <a href="#" class="nav-item active"><span>🛡️</span>Safety</a>
+  <a href="#" class="nav-item"><span>👤</span>Profile</a>
+</div>
 
 <script>
-async function triggerSOS() {
-  const btn = document.getElementById('sosBtn');
-  btn.innerText = "⏳ Sending SOS...";
-  btn.disabled = true;
-
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    const locationLink = `https://maps.google.com/?q=${lat},${lng}`;
-
-    document.getElementById('sos-location').innerHTML = `Location: <br><a href="${locationLink}" target="_blank">${locationLink}</a>`;
-    document.getElementById('sos-modal').className = "modal-show";
-
-    localStorage.setItem('lastSOS', JSON.stringify({lat, lng, time: new Date()}));
-
-    window.open(`https://wa.me/?text=🚨 EMERGENCY SOS! I need help! My location: ${locationLink}`, '_blank');
-    
-    btn.innerText = "🚨 Emergency SOS";
-    btn.disabled = false;
-  }, () => {
-    alert("Please enable Location!");
-    btn.innerText = "🚨 Emergency SOS";
-    btn.disabled = false;
-  });
-}
-
-function closeSOS(){
-  document.getElementById('sos-modal').className = "modal-hidden";
-}
-
 function shareLocation(){
-  navigator.geolocation.getCurrentPosition(pos => {
-    window.open(`https://wa.me/?text=My location: https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`);
+  navigator.geolocation.getCurrentPosition(p=>{
+    window.open(`https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`,'_blank');
   });
 }
 function findNearby(type){
-  navigator.geolocation.getCurrentPosition(pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    const query = type === 'hospital' ? 'hospital' : 'police station';
-    window.open(`https://www.google.com/maps/search/${query}/@${lat},${lng},15z`, '_blank');
+  navigator.geolocation.getCurrentPosition(p=>{
+    window.open(`https://www.google.com/maps/search/${type}/@${p.coords.latitude},${p.coords.longitude},15z`,'_blank');
   });
 }
 </script>
 </body>
+</html>
